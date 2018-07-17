@@ -289,6 +289,11 @@ PdfCommandLineParser::PdfCommandLineParser(PdfGlobal & s, QList<PdfObject> & ps)
  	addarg("header-spacing",0,"Spacing between header and content in mm", new FloatSetter(od.header.spacing,"real"));
  	addarg("header-html",0,"Adds a html header", new QStrSetter(od.header.htmlUrl,"url"));
 
+	addarg("margin-bottom",'B',"Set the page bottom margin", new UnitRealSetter(od.margin.bottom,"unitreal"));
+	addarg("margin-left",'L',"Set the page left margin", new UnitRealSetter(od.margin.left,"unitreal"));
+	addarg("margin-right",'R',"Set the page right margin", new UnitRealSetter(od.margin.right,"unitreal"));
+	addarg("margin-top",'T',"Set the page top margin", new UnitRealSetter(od.margin.top,"unitreal"));
+
 	addarg("replace",0, "Replace [name] with value in header and footer (repeatable)", new MapSetter<>(od.replacements, "name", "value"));
 
 	section("TOC Options");

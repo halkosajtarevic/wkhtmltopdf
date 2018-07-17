@@ -31,6 +31,11 @@ Q_IMPORT_PLUGIN(qjpcodecs)
 Q_IMPORT_PLUGIN(qkrcodecs)
 Q_IMPORT_PLUGIN(qtwcodecs)
 #endif
+#ifdef WIN32
+	#include <windows.h>
+#else
+	#include <unistd.h>
+#endif // win32
 
 namespace wkhtmltopdf {
 
@@ -74,7 +79,16 @@ void ConverterPrivate::loadProgress(int progress) {
 	progressString = QString::number(progress) + "%";
 	emit outer().progressChanged(progress);
 }
+void sleepcp(int milliseconds);
 
+void sleepcp(int milliseconds) // Cross-platform sleep function
+{
+	#ifdef WIN32
+		Sleep(milliseconds);
+	#else
+		usleep(milliseconds * 1000);
+	#endif // win32
+}
 void ConverterPrivate::forwardError(QString error) {
 	emit outer().error(error);
 }
@@ -90,8 +104,11 @@ void ConverterPrivate::cancel() {
 bool ConverterPrivate::convert() {
 	conversionDone=false;
 	beginConvert();
-	while (!conversionDone)
-		qApp->processEvents(QEventLoop::WaitForMoreEvents | QEventLoop::AllEvents);
+	while (!conversionDone) {
+		QCoreApplication::processEvents();
+		QCoreApplication::sendPostedEvents();
+		sleepcp(50);
+	}
 	return !error;
 }
 

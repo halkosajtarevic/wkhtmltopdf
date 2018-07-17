@@ -174,6 +174,9 @@ struct DLL_PUBLIC PdfObject {
 
 	QString page;
 
+	//! Margin related settings
+	Margin margin;
+
 	//! Header related settings
 	HeaderFooter header;
 
